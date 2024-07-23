@@ -1,0 +1,153 @@
+&FORCE_EVAL
+  METHOD FIST
+  STRESS_TENSOR ANALYTICAL
+  &MM
+    &FORCEFIELD
+      @INCLUDE 'par_temp.inc'
+      &SPLINE
+         EMAX_SPLINE 100000
+         RCUT_NB 12.0
+      &END
+      EI_SCALE14 0.5
+      VDW_SCALE14 0.5
+      SHIFT_CUTOFF .TRUE. 
+    &END FORCEFIELD
+    &POISSON
+      &EWALD
+        EWALD_TYPE spme
+        ALPHA .44
+        GMAX 72
+        O_SPLINE 6
+      &END EWALD
+    &END POISSON
+  &END MM
+  &SUBSYS
+    &CELL
+      ABC [angstrom] 40 40 40
+      PERIODIC XYZ
+    &END CELL
+    &TOPOLOGY
+      COORD_FILE_NAME solvion.pdb
+      COORDINATE pdb
+      CONN_FILE_FORMAT psf
+      CONN_FILE_NAME temp.psf
+    &END TOPOLOGY
+    &PRINT
+      &TOPOLOGY_INFO
+         PSF_INFO
+      &END
+    &END
+    &KIND OG301
+      ELEMENT O
+    &END KIND
+    &KIND CG331
+      ELEMENT C
+    &END KIND
+    &KIND CG321
+      ELEMENT C
+    &END KIND
+    &KIND HGA2
+      ELEMENT H
+    &END KIND
+    &KIND HGA3
+      ELEMENT H
+    &END KIND
+    &KIND LIT
+      ELEMENT Li
+    &END KIND
+    &KIND FTF
+      ELEMENT F
+    &END KIND
+    &KIND CTF
+      ELEMENT C
+    &END KIND
+    &KIND STF
+      ELEMENT S
+    &END KIND
+    &KIND OTF
+      ELEMENT O
+    &END KIND
+    &KIND NTF
+      ELEMENT N
+    &END KIND
+  &END SUBSYS
+&END FORCE_EVAL
+
+&MOTION
+ &MD
+   ENSEMBLE NPT_I
+   TIMESTEP 0.25
+   STEPS  4000000
+   TEMPERATURE 500
+   &THERMOSTAT
+     &NOSE
+       LENGTH 3
+       YOSHIDA 3
+       TIMECON 10
+       MTS 2
+     &END NOSE
+   &END
+   &BAROSTAT
+     PRESSURE 1.01325
+     TIMECON 1000
+     VIRIAL XYZ
+   &END BAROSTAT
+   &PRINT
+     &ENERGY
+      &EACH
+        MD 400
+      &END
+     &END ENERGY
+     &COEFFICIENTS
+      &EACH
+        MD 400
+      &END
+     &END COEFFICIENTS
+     &PROGRAM_RUN_INFO
+      &EACH
+        MD 4000
+      &END
+     &END PROGRAM_RUN_INFO
+   &END PRINT
+ &END MD
+ &PRINT
+  &VELOCITIES OFF
+  &END VELOCITIES
+  &FORCES OFF
+  &END FORCES
+  &RESTART_HISTORY OFF
+  &END RESTART_HISTORY
+  &RESTART
+      &EACH
+        MD 4000
+      &END
+  &END RESTART
+  &TRAJECTORY
+    &EACH
+      MD 4000
+    &END EACH
+    FORMAT DCD
+  &END
+  &CELL
+     &EACH
+        MD 4000
+     &END
+  &END
+ &END PRINT
+&END MOTION
+
+&GLOBAL
+  PROJECT peo_md1
+  RUN_TYPE MD
+  PRINT_LEVEL LOW
+&END GLOBAL
+
+&EXT_RESTART
+  RESTART_FILE_NAME peo_md-1.restart
+  RESTART_DEFAULT F
+  RESTART_POS T
+!  RESTART_VEL T
+  RESTART_CELL T
+!  RESTART_CORE_POS T
+!  RESTART_CORE_VELOCITY T
+&END EXT_RESTART

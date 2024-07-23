@@ -1,0 +1,87 @@
+@INCLUDE 'temp.inc'
+
+&FORCE_EVAL
+  METHOD FIST
+  &MM
+    &FORCEFIELD
+      @INCLUDE 'par_temp.inc'
+      &SPLINE
+         EMAX_SPLINE 100000
+         RCUT_NB 12.0
+      &END
+      EI_SCALE14 0.5
+      VDW_SCALE14 0.5
+      SHIFT_CUTOFF .TRUE. 
+    &END FORCEFIELD
+    &POISSON
+      &EWALD
+        EWALD_TYPE spme
+        ALPHA .44
+        GMAX 72
+        O_SPLINE 6
+      &END EWALD
+    &END POISSON
+  &END MM
+  &SUBSYS
+    &CELL
+      ABC [angstrom] $XDIM $XDIM $XDIM
+      PERIODIC XYZ
+    &END CELL
+    &TOPOLOGY
+      COORD_FILE_NAME temp.pdb
+      COORDINATE pdb
+      CONN_FILE_FORMAT psf
+      CONN_FILE_NAME temp.psf
+    &END TOPOLOGY
+    &PRINT
+      &TOPOLOGY_INFO
+         PSF_INFO
+      &END
+    &END
+    &KIND OG301
+      ELEMENT O
+    &END KIND
+    &KIND CG331
+      ELEMENT C
+    &END KIND
+    &KIND CG321
+      ELEMENT C
+    &END KIND
+    &KIND HGA2
+      ELEMENT H
+    &END KIND
+    &KIND HGA3
+      ELEMENT H
+    &END KIND
+    &KIND LIT
+      ELEMENT Li
+    &END KIND
+    &KIND FTF
+      ELEMENT F
+    &END KIND
+    &KIND CTF
+      ELEMENT C
+    &END KIND
+    &KIND STF
+      ELEMENT S
+    &END KIND
+    &KIND OTF
+      ELEMENT O
+    &END KIND
+    &KIND NTF
+      ELEMENT N
+    &END KIND
+  &END SUBSYS
+  &PRINT
+    &FORCES
+      FILENAME forces
+    &END FORCES
+  &END
+&END FORCE_EVAL
+
+&GLOBAL
+  PROJECT peo_mm
+  RUN_TYPE ENERGY_FORCE
+  PRINT_LEVEL MEDIUM
+&END GLOBAL
+

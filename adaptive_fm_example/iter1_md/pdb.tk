@@ -1,0 +1,20 @@
+package require pbctools
+
+set sel [atomselect top "all"]
+
+set nf [molinfo top get numframes]
+exec mkdir pdb
+set cell [pbc get -all]
+
+set i 0
+for {set f 200} {$f < $nf} {set f [expr $f + 40]} {
+   $sel frame $f
+   $sel update
+   set dim [lindex $cell $f 2]
+   $sel writepdb pdb/f$i.pdb
+   set fid [open "pdb/var$i.inc" "w"]
+   puts $fid "@SET XDIM $dim"
+   set i [expr $i +1]
+}
+
+exit
