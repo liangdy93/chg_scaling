@@ -1,0 +1,3 @@
+The folder outlines the scripts for adaptive force matching for charge-scaling parametrization of Li-TFSI-PEO system. Please refer to the letter titled "Charge scaling in classical force fields for lithium ions in polymers" (currently under review) for further details. 
+
+The three folders demonstrate an example of one iteration in the force field optimization, including classical MD sampling, QM calculation of forces, and optimization of parameters. The scripts utilize CP2K (ver 7.1), Scipy, and VMD (tk files). Despite being simple logically, the scripts were written for in-house purposes, and the optimization is hard-coded for the specific connection file format (psf, extended), and CP2K version. Please not hesitate to contact me if you have questions.
